@@ -7,8 +7,8 @@ Execute Task,180.0,reference_table
 Vendor Review (optional),240.0,reference_table
 Quality Check,45.0,reference_table
 Close Ticket,15.0,reference_table
-Manual Approval,2.9916666666666667,data_driven
-Notify Customer,0.6,data_driven
-Enrich Data,1.1,data_driven
 Classify Request,0.6166666666666667,data_driven
 Fulfill Request,1.5333333333333334,data_driven
+Notify Customer,0.6,data_driven
+Enrich Data,1.1,data_driven
+Manual Approval,2.9916666666666667,data_driven

@@ -21,7 +21,7 @@ from datetime import datetime
 
 st.set_page_config(
     page_title="Bottleneck Detection System",
-    page_icon="🚨",
+    page_icon="ALERT",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -56,7 +56,7 @@ st.markdown("""
 # ============================================================================
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.join(SCRIPT_DIR, '..', '..')
+PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, '..'))
 
 # ============================================================================
 # LOAD DATA AND MODEL
@@ -65,7 +65,7 @@ PROJECT_ROOT = os.path.join(SCRIPT_DIR, '..', '..')
 @st.cache_data
 def load_data():
     """Load processed data and predictions"""
-    file_path = os.path.join(PROJECT_ROOT, 'operational-insight', 'data', 'processed', '2k_final_predictions.csv')
+    file_path = os.path.join(PROJECT_ROOT, 'data', 'processed', '2k_final_predictions.csv')
     df_2k = pd.read_csv(file_path)
     return df_2k
 
@@ -92,7 +92,7 @@ try:
         df['bottleneck_prediction'] = model.predict(X)
     
 except Exception as e:
-    st.error(f"⚠️ Could not load data or model: {e}")
+    st.error(f"WARN Could not load data or model: {e}")
     st.info("Make sure you've run the training notebooks first!")
     st.stop()
 
@@ -100,10 +100,10 @@ except Exception as e:
 # SIDEBAR
 # ============================================================================
 
-st.sidebar.title("🎛️ Controls")
+st.sidebar.title("Controls Controls")
 
 # Filters
-st.sidebar.header("📊 Filters")
+st.sidebar.header("Charts Filters")
 
 # Activity filter
 activities = ['All'] + sorted(df['activity_name'].unique().tolist())
@@ -142,7 +142,7 @@ if selected_activity != 'All':
 # MAIN DASHBOARD
 # ============================================================================
 
-st.markdown('<p class="main-header">🚨 Bottleneck Detection Dashboard</p>', unsafe_allow_html=True)
+st.markdown('<p class="main-header">ALERT Bottleneck Detection Dashboard</p>', unsafe_allow_html=True)
 st.markdown("---")
 
 # ============================================================================
@@ -159,28 +159,28 @@ avg_wait = df_filtered['wait_time_minutes'].mean() if 'wait_time_minutes' in df_
 
 with col1:
     st.metric(
-        label="📋 Total Events",
+        label="List Total Events",
         value=f"{total_events:,}",
         delta=None
     )
 
 with col2:
     st.metric(
-        label="🚨 Bottlenecks",
+        label="ALERT Bottlenecks",
         value=f"{bottleneck_count:,}",
         delta=f"{bottleneck_rate:.1f}%"
     )
 
 with col3:
     st.metric(
-        label="💰 Avg Cost",
+        label="Cost Avg Cost",
         value=f"${avg_cost:.2f}",
         delta=None
     )
 
 with col4:
     st.metric(
-        label="⏱️ Avg Wait Time",
+        label="Time Avg Wait Time",
         value=f"{avg_wait:.1f} min",
         delta=None
     )
@@ -188,9 +188,9 @@ with col4:
 with col5:
     # Calculate risk score
     risk_score = (bottleneck_rate + (avg_wait / 10)) / 2
-    risk_level = "🟢 Low" if risk_score < 20 else "🟡 Medium" if risk_score < 40 else "🔴 High"
+    risk_level = "GREEN Low" if risk_score < 20 else "YELLOW Medium" if risk_score < 40 else "RED High"
     st.metric(
-        label="⚠️ Risk Level",
+        label="WARN Risk Level",
         value=risk_level,
         delta=f"{risk_score:.1f}"
     )
@@ -202,7 +202,7 @@ st.markdown("---")
 # ============================================================================
 
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "🗺️ Heatmap", "📊 Activity Analysis", "🎯 Predictions", "🔍 Deep Dive", "🤖 Predict New"
+    "Map Heatmap", "Charts Activity Analysis", "Target Predictions", "Search Deep Dive", "AI Predict New"
 ])
 
 # ============================================================================
@@ -210,7 +210,7 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 # ============================================================================
 
 with tab1:
-    st.header("🗺️ Bottleneck Heatmap by Activity and Time")
+    st.header("Map Bottleneck Heatmap by Activity and Time")
     
     # Create heatmap data
     if 'hour_of_day' in df_filtered.columns:
@@ -249,7 +249,7 @@ with tab1:
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader("📊 Bottleneck Rate by Activity")
+        st.subheader("Charts Bottleneck Rate by Activity")
         activity_stats = df_filtered.groupby('activity_name').agg({
             'bottleneck_probability': ['mean', 'count']
         }).reset_index()
@@ -270,7 +270,7 @@ with tab1:
         st.plotly_chart(fig_activity_rate, use_container_width=True)
     
     with col2:
-        st.subheader("🔥 Top Bottleneck Activities")
+        st.subheader("Hot Top Bottleneck Activities")
         top_bottlenecks = df_filtered[df_filtered['bottleneck_probability'] >= threshold]
         if len(top_bottlenecks) > 0:
             top_activities = top_bottlenecks['activity_name'].value_counts().head(10)
@@ -291,7 +291,7 @@ with tab1:
 # ============================================================================
 
 with tab2:
-    st.header("📊 Activity Duration Analysis")
+    st.header("Charts Activity Duration Analysis")
     
     col1, col2 = st.columns(2)
     
@@ -332,7 +332,7 @@ with tab2:
             st.plotly_chart(fig_wait, use_container_width=True)
     
     # Detailed activity table
-    st.subheader("📋 Activity Statistics")
+    st.subheader("List Activity Statistics")
     
     agg_dict = {'case_id': 'count', 'bottleneck_probability': 'mean'}
     if 'duration_minutes' in df_filtered.columns:
@@ -355,7 +355,7 @@ with tab2:
 # ============================================================================
 
 with tab3:
-    st.header("🎯 Prediction Summary")
+    st.header("Target Prediction Summary")
     
     col1, col2, col3 = st.columns([2, 2, 1])
     
@@ -400,14 +400,14 @@ with tab3:
         st.plotly_chart(fig_confidence, use_container_width=True)
     
     with col3:
-        st.subheader("📊 Statistics")
+        st.subheader("Charts Statistics")
         st.metric("Mean Probability", f"{df_filtered['bottleneck_probability'].mean():.3f}")
         st.metric("Median Probability", f"{df_filtered['bottleneck_probability'].median():.3f}")
         st.metric("Std Dev", f"{df_filtered['bottleneck_probability'].std():.3f}")
         st.metric("High Risk (>0.7)", f"{(df_filtered['bottleneck_probability'] > 0.7).sum()}")
     
     # Top predicted bottlenecks
-    st.subheader("🚨 Top 20 Predicted Bottlenecks")
+    st.subheader("ALERT Top 20 Predicted Bottlenecks")
     
     display_cols = ['case_id', 'activity_name', 'bottleneck_probability']
     if 'duration_minutes' in df_filtered.columns:
@@ -430,7 +430,7 @@ with tab3:
 # ============================================================================
 
 with tab4:
-    st.header("🔍 Deep Dive Analysis")
+    st.header("Search Deep Dive Analysis")
     
     # Scatter plots
     col1, col2 = st.columns(2)
@@ -465,7 +465,7 @@ with tab4:
             st.plotly_chart(fig_scatter2, use_container_width=True)
     
     # Case analysis
-    st.subheader("📦 Case-Level Analysis")
+    st.subheader("Package Case-Level Analysis")
     
     agg_dict = {
         'bottleneck_probability': 'max',
@@ -509,7 +509,7 @@ with tab4:
 # ============================================================================
 
 with tab5:
-    st.header("🤖 Predict New Event")
+    st.header("AI Predict New Event")
     st.write("Enter event details to get a bottleneck prediction:")
     
     col1, col2 = st.columns(2)
@@ -572,7 +572,7 @@ with tab5:
                 format_func=lambda x: "No" if x == 0 else "Yes"
             )
     
-    if st.button("🎯 Predict Bottleneck", type="primary"):
+    if st.button("Target Predict Bottleneck", type="primary"):
         # Prepare input - make sure all features are present
         input_data = {}
         for feat in features:
@@ -594,9 +594,9 @@ with tab5:
         
         with col1:
             if prediction == 1:
-                st.error("🚨 **BOTTLENECK DETECTED**")
+                st.error("ALERT **BOTTLENECK DETECTED**")
             else:
-                st.success("✅ **NORMAL EVENT**")
+                st.success("OK **NORMAL EVENT**")
         
         with col2:
             st.metric(
@@ -606,7 +606,7 @@ with tab5:
             )
         
         with col3:
-            risk = "🔴 High" if probability > 0.7 else "🟡 Medium" if probability > 0.3 else "🟢 Low"
+            risk = "RED High" if probability > 0.7 else "YELLOW Medium" if probability > 0.3 else "GREEN Low"
             st.metric("Risk Level", risk)
         
         # Gauge chart
@@ -634,7 +634,7 @@ with tab5:
         st.plotly_chart(fig_gauge, use_container_width=True)
         
         # Feature values
-        st.subheader("📊 Input Values")
+        st.subheader("Charts Input Values")
         input_df = pd.DataFrame([feature_inputs])
         st.dataframe(input_df, use_container_width=True, hide_index=True)
 
