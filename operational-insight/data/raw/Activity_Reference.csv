@@ -1,0 +1,9 @@
+activity_name,expected_duration_minutes,department,role
+Receive Request,10,Sales Support,Coordinator
+Validate Request,30,Operations,Analyst
+Approve Budget (optional),90,Finance,Manager
+Assign Resource,20,IT,Manager
+Execute Task,180,IT,Engineer
+Vendor Review (optional),240,Operations,VendorMgr
+Quality Check,45,QA,QA Analyst
+Close Ticket,15,Customer Success,Rep

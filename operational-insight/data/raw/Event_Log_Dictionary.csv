@@ -1,0 +1,31 @@
+column,dtype,description,example
+case_id,string,Unique workflow instance identifier.,C00001
+event_num_in_case,int,Position of event in the case (sorted by start time).,1
+activity_name,category,Business activity label; includes optional and rework steps.,Receive Request
+department,category,Owning department for the activity.,Sales Support
+resource_role,category,Role of the acting resource.,Coordinator
+resource_id,string,Pseudonymous resource identifier (no PII).,Coordinator-650
+start_timestamp_utc,ISO8601 string,Event start timestamp (UTC).,2025-07-18T17:02:02
+end_timestamp_utc,ISO8601 string,Event end timestamp (UTC).,2025-07-18T17:12:21
+duration_minutes,float,Activity execution time in minutes.,10.32
+wait_time_minutes,float,Waiting time (queue/hand-offs) before this activity starts.,182.04
+queue_length_at_start,int,Estimated queue length at event start.,8
+system_load_index_0to1,float (0-1),Proxy for global system load; higher means busier system.,0.61
+expected_duration_minutes,float,Reference expected duration for this activity.,10
+variance_to_expected,float,(duration - expected)/expected; >0 means slower than expected.,0.032
+is_bottleneck_event,"binary {0,1}",Label if event exhibits bottleneck properties (slow/queued/high load).,1
+inbound_channel,category,Case creation channel.,API
+region,category,Geographic region.,US-West
+customer_tier,category,Customer tier segment.,Standard
+industry,category,Customer industry (used to modulate vendor dependency & risk).,Healthcare
+company_size_bucket,category,Company size bucket for the customer.,51-200
+tech_maturity_1to5,int (1-5),Operational/technical maturity of the customer organization.,4
+risk_tolerance_1to5,int (1-5),Organizational risk tolerance.,2
+priority,category,Case priority (Low/Medium/High).,Medium
+sla_hours,int,Service-level agreement allowance for case cycle time.,96
+sla_breached,"binary {0,1}",Whether the case cycle time exceeded the SLA (broadcast to all events).,0
+handoff_count_so_far,int,Cumulative inter-department hand-offs observed in the case up to this event.,0
+case_cycle_time_hours,float,Final cycle time for the case (broadcast to all events).,12.454722222222221
+weekday,category,Day of week of event start.,Friday
+hour_of_day,int,Hour of day of event start [0-23].,17
+month,int,Calendar month of event start [1-12].,7
